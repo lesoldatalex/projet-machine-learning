@@ -1,0 +1,13 @@
+train: dataset/images/train
+val: dataset/images/valid
+test: dataset/images/test  # optionnel
+
+nc: 6
+names: ['Running', 'Walking', 'laying_down', 'not_defined', 'seated', 'stands']
+
+roboflow:
+  workspace: rescuedby
+  project: sard-peykp-lxuf9
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/rescuedby/sard-peykp-lxuf9/dataset/1
