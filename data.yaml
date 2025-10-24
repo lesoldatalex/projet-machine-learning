@@ -1,4 +1,6 @@
-train: dataset/images/train
+train:
+- dataset/images/train_rotated
+- dataset/images/train
 val: dataset/images/valid
 test: dataset/images/test  # optionnel
 

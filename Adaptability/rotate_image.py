@@ -31,24 +31,50 @@ def rotate_point(x, y, angle, cx=0.5, cy=0.5):
 def rotate_yolo_annotation(annotation, angle):
     """Rotate YOLO format annotation
     annotation: list containing [class_id, x_center, y_center, width, height]
-    angle: rotation angle in degrees
+    angle: angle in degrees
     """
     class_id = annotation[0]
-    x_center, y_center = rotate_point(annotation[1], annotation[2], angle)
+    x_center, y_center = annotation[1], annotation[2]
+    width, height = annotation[3], annotation[4]
     
-    # For width and height, we don't rotate them as they are dimensions
-    # but for angles that are multiples of 90 degrees, we swap them
-    width = annotation[3]
-    height = annotation[4]
+    # Convert to corners (normalized coordinates)
+    # Calculate the four corners of the bounding box
+    x1 = x_center - width/2
+    y1 = y_center - height/2
+    x2 = x_center + width/2
+    y2 = y_center - height/2
+    x3 = x_center + width/2
+    y3 = y_center + height/2
+    x4 = x_center - width/2
+    y4 = y_center + height/2
     
-    if angle in [90, 270]:
-        width, height = height, width
-        
-    # Ensure coordinates stay within bounds [0, 1]
-    x_center = np.clip(x_center, 0, 1)
-    y_center = np.clip(y_center, 0, 1)
+    # Rotate each corner
+    corners = [
+        rotate_point(x1, y1, angle),
+        rotate_point(x2, y2, angle),
+        rotate_point(x3, y3, angle),
+        rotate_point(x4, y4, angle)
+    ]
     
-    return [class_id, x_center, y_center, width, height]
+    # Find the new bounding box that encompasses all rotated corners
+    xs = [p[0] for p in corners]
+    ys = [p[1] for p in corners]
+    
+    # New center point
+    new_x_center = (min(xs) + max(xs)) / 2
+    new_y_center = (min(ys) + max(ys)) / 2
+    
+    # New width and height
+    new_width = max(xs) - min(xs)
+    new_height = max(ys) - min(ys)
+    
+    # Ensure coordinates and dimensions stay within bounds [0, 1]
+    new_x_center = np.clip(new_x_center, 0, 1)
+    new_y_center = np.clip(new_y_center, 0, 1)
+    new_width = min(new_width, 1.0)
+    new_height = min(new_height, 1.0)
+    
+    return [class_id, new_x_center, new_y_center, new_width, new_height]
 
 def process_image_and_annotation(image_path, label_path, output_image_path, output_label_path, angle):
     """Process both image and its annotation file"""
@@ -118,19 +144,16 @@ def main():
     print(f"Found {len(image_files)} .jpg files")
 
     # Randomly select 200 images
-    selected_images = random.sample(image_files, min(200, len(image_files)))
+    selected_images = random.sample(image_files, min(350, len(image_files)))
     print(selected_images);
-    
-    # Possible rotation angles
-    angles = [90, 180, 270]
     
     # Process each selected image
     for img_path in selected_images:
         # Get corresponding label path
         label_path = labels_dir / f"{img_path.stem}.txt"
         
-        # Randomly select an angle
-        angle = random.choice(angles)
+        # Generate random angle between -15 and +15 degrees
+        angle = random.uniform(-15, 15)
         
         # Create output paths
         output_image_path = output_base / f"{img_path.stem}_rot{angle}.jpg"
