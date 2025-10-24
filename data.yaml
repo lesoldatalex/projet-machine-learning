@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 train:
 - dataset/images/train
 val: dataset/images/valid
 test: dataset/images/test  # optionnel
+=======
+
+train: dataset_augmente/images/train
+val: dataset_augmente/images/valid
+test: dataset_augmente/images/test  # optionnel
+>>>>>>> 24c5617a11fefdac1167ed6fa19e0784d0f48286
 
 nc: 6
 names: ['Running', 'Walking', 'laying_down', 'not_defined', 'seated', 'stands']
