@@ -1,8 +1,7 @@
-train:
-- dataset/images/train_rotated
-- dataset/images/train
-val: dataset/images/valid
-test: dataset/images/test  # optionnel
+
+train: dataset_augmente/images/train
+val: dataset_augmente/images/valid
+test: dataset_augmente/images/test  # optionnel
 
 nc: 6
 names: ['Running', 'Walking', 'laying_down', 'not_defined', 'seated', 'stands']
