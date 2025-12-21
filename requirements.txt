@@ -8,4 +8,5 @@ torch
 torchvision
 ultralytics
 torchmetrics
+mlflow
 pytest
