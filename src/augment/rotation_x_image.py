@@ -1,7 +1,18 @@
-# Ce fichier a été archivé et déplacé dans `archive/Adaptability/rotation_x_image.py`
-# Utiliser `from src.augment.rotation_x_image import process_image_and_annotation` à la place
+import os
+import random
+import cv2
+import numpy as np
+from pathlib import Path
+import shutil
 
-raise RuntimeError('Fichier archivé; voir archive/Adaptability/rotation_x_image.py')
+"""
+Tilt images around the X axis (vertical perspective tilt).
+This script performs a perspective transform that simulates rotating the image
+around the X axis (tilting forward/back). It also updates YOLO-format annotations
+by transforming the four corner points of each bounding box and recomputing the
+axis-aligned bounding box in normalized coordinates.
+"""
+
 
 def build_tilt_transform_matrix(w, h, tilt_deg):
     """Return a 3x3 perspective transform matrix that simulates an X-axis tilt.
@@ -55,7 +66,7 @@ def yolo_to_corners(xc, yc, w, h, img_w, img_h):
     x1 = x_center - bw / 2.0
     y1 = y_center - bh / 2.0
     x2 = x_center + bw / 2.0
-    y2 = y_center + bh / 2.0
+    y2 = y_center - bh / 2.0
     return [(x1, y1), (x2, y1), (x2, y2), (x1, y2)]
 
 
@@ -127,45 +138,5 @@ def process_image_and_annotation(image_path, label_path, output_image_path, outp
 
     return True
 
-
-def main():
-    current_file = Path(__file__).resolve()
-    project_root = current_file.parent.parent
-    dataset_root = project_root / 'dataset'
-    images_dir = dataset_root / 'images' / 'train'
-    labels_dir = dataset_root / 'labels' / 'train'
-
-    print(f"Looking for images in: {images_dir.absolute()}")
-    if not images_dir.exists():
-        print(f"Error: Images directory does not exist: {images_dir.absolute()}")
-        return
-
-    output_base = dataset_root / 'images' / 'train_tilted_x'
-    output_labels_base = dataset_root / 'labels' / 'train_tilted_x'
-
-    # Remove old directories if they exist
-    if output_base.exists():
-        print(f"Removing existing output directory: {output_base}")
-        shutil.rmtree(output_base)
-    if output_labels_base.exists():
-        print(f"Removing existing output directory: {output_labels_base}")
-        shutil.rmtree(output_labels_base)
-
-    output_base.mkdir(parents=True, exist_ok=True)
-    output_labels_base.mkdir(parents=True, exist_ok=True)
-
-    image_files = list(images_dir.glob('*.jpg'))
-    print(f"Found {len(image_files)} .jpg files")
-    selected_images = random.sample(image_files, min(200, len(image_files)))
-
-    for img_path in selected_images:
-        label_path = labels_dir / f"{img_path.stem}.txt"
-        tilt_deg = random.uniform(-30, 30)  # tilt between -30 and 30 degrees
-        output_image_path = output_base / f"{img_path.stem}_tiltx{int(tilt_deg)}.jpg"
-        output_label_path = output_labels_base / f"{img_path.stem}_tiltx{int(tilt_deg)}.txt"
-        ok = process_image_and_annotation(img_path, label_path, output_image_path, output_label_path, tilt_deg)
-        if ok:
-            print(f"Processed {img_path.name} tilt={tilt_deg:.2f}")
-
 if __name__ == '__main__':
-    main()
+    pass

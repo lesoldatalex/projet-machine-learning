@@ -1,7 +1,9 @@
-# Ce fichier a été archivé et déplacé dans `archive/Adaptability/rotate_image.py`
-# Utiliser `from src.augment.rotate_image import process_image_and_annotation` à la place
-
-raise RuntimeError('Fichier archivé; voir archive/Adaptability/rotate_image.py')
+import os
+import random
+import cv2
+import numpy as np
+from pathlib import Path
+import shutil
 
 def rotate_point(x, y, angle, cx=0.5, cy=0.5):
     """Rotate a point around a center point
@@ -105,68 +107,5 @@ def process_image_and_annotation(image_path, label_path, output_image_path, outp
     # Save rotated image
     cv2.imwrite(str(output_image_path), rotated_img)
 
-def main():
-    # Set paths
-    current_file = Path(__file__).resolve()
-    project_root = current_file.parent.parent
-    dataset_root = project_root / 'dataset'
-    images_dir = dataset_root / 'images' / 'train'
-    labels_dir = dataset_root / 'labels' / 'train'
-    
-    print(f"Looking for images in: {images_dir.absolute()}")
-    
-    # Check if directory exists
-    if not images_dir.exists():
-        print(f"Error: Images directory does not exist: {images_dir.absolute()}")
-        return
-        
-    # Create output directories
-    output_base = dataset_root / 'images' / 'train_rotated'
-    output_labels_base = dataset_root / 'labels' / 'train_rotated'
-    
-    # Remove old directories if they exist
-    if output_base.exists():
-        print(f"Removing existing output directory: {output_base}")
-        shutil.rmtree(output_base)
-    if output_labels_base.exists():
-        print(f"Removing existing output directory: {output_labels_base}")
-        shutil.rmtree(output_labels_base)
-    
-    # Create fresh directories
-    print("Creating new output directories...")
-    output_base.mkdir(parents=True, exist_ok=True)
-    output_labels_base.mkdir(parents=True, exist_ok=True)
-    
-    # Get list of all images
-    image_files = list(images_dir.glob('*.jpg'))
-    print(f"Found {len(image_files)} .jpg files")
-
-    # Randomly select 200 images
-    selected_images = random.sample(image_files, min(350, len(image_files)))
-    print(selected_images);
-    
-    # Process each selected image
-    for img_path in selected_images:
-        # Get corresponding label path
-        label_path = labels_dir / f"{img_path.stem}.txt"
-        
-        # Generate random angle between -15 and +15 degrees
-        angle = random.uniform(-15, 15)
-        
-        # Create output paths
-        output_image_path = output_base / f"{img_path.stem}_rot{angle}.jpg"
-        output_label_path = output_labels_base / f"{img_path.stem}_rot{angle}.txt"
-        
-        # Process the image and its annotation
-        process_image_and_annotation(
-            img_path,
-            label_path,
-            output_image_path,
-            output_label_path,
-            angle
-        )
-        print(f"Processed {img_path.name} with {angle}° rotation")
-
 if __name__ == "__main__":
-    main()
-    print("FINI")
+    pass

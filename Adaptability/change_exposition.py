@@ -1,9 +1,7 @@
-import os
-import random
-import cv2
-import numpy as np
-from pathlib import Path
-import shutil
+# Ce fichier a été archivé et déplacé dans `archive/Adaptability/change_exposition.py`
+# Utiliser `from src.augment.change_exposition import process_image_and_annotation` à la place
+
+raise RuntimeError('Fichier archivé; voir archive/Adaptability/change_exposition.py')
 
 def adjust_brightness_contrast(image, brightness_factor=None, contrast_factor=None):
     """

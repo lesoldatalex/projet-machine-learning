@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=42","wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "projet-machine-learning"
+version = "0.0.1"
+description = "Reorganized ML project"
+readme = "README.md"
+dependencies = [
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "seaborn",
+    "opencv-python",
+    "tqdm",
+    "torch",
+    "torchvision",
+    "ultralytics",
+    "torchmetrics",
+]

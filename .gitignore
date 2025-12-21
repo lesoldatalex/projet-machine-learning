@@ -1,1 +1,25 @@
-/dataset_augmente/
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.env
+.venv
+venv/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data
+dataset/images/*
+dataset/labels/*
+dataset_augmente/*
+archive/
+
+# VSCode
+.vscode/
+
+# Others
+*.log
+

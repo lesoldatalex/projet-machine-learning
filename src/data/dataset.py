@@ -1,8 +1,9 @@
-
-# Ce fichier a été archivé et déplacé dans `archive/Dataset.py`
-# Il est désormais conseillé d'utiliser `from src.data.dataset import SARD2YOLODataset, collate_fn`
-
-raise RuntimeError('Fichier archivé; voir archive/Dataset.py')
+import os
+import cv2
+import numpy as np
+import torch
+from torch.utils.data import Dataset
+from torchvision.transforms import functional as F
 
 # -----------------------------
 # 1. Utility functions
@@ -30,7 +31,7 @@ def yolo_to_boxes(yolo_file, img_width, img_height):
             xmin = max(x_center - w/2, 0)
             ymin = max(y_center - h/2, 0)
             xmax = min(x_center + w/2, img_width)
-            ymax = min(y_center + h/2, img_height)
+            ymax = min(y_center + w/2, img_height)
             if xmax <= xmin or ymax <= ymin:
                 continue
             boxes.append([xmin, ymin, xmax, ymax])
